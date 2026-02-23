@@ -1,0 +1,33 @@
+FROM nvidia/cuda:12.8.1-cudnn-runtime-ubuntu24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV HF_HOME=/root/.cache/huggingface
+ENV PYTHONPATH=/app
+
+RUN apt-get update && apt-get install -y \
+    git \
+    ffmpeg \
+    libsndfile1 \
+    python3.12 \
+    python3.12-venv \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python3.12 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+RUN pip install --upgrade pip
+
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+
+WORKDIR /app
+RUN git clone https://github.com/jamiepine/voicebox.git .
+
+RUN pip install -r backend/requirements.txt
+
+VOLUME ["/data", "/root/.cache/huggingface"]
+
+EXPOSE 17493
+
+CMD ["python", "backend/server.py", "--host", "0.0.0.0", "--port", "17493", "--data-dir", "/data"]

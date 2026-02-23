@@ -1,0 +1,14 @@
+.git
+.gitignore
+*.md
+.env
+.env.*
+!.env.example
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+node_modules
+.DS_Store
+Thumbs.db
