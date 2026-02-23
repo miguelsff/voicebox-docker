@@ -1,2 +1,4 @@
 .env
 *.log
+.claude/
+skills-lock.json
